@@ -1,23 +1,20 @@
 import { Resource } from "sst";
 import { Util } from "@serverless-scratch/core/util";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import { GetCommand, DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
+import { QueryCommand, DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 
 const dynamoDb = DynamoDBDocumentClient.from(new DynamoDBClient({}));
 
 export const main = Util.handler(async (event) => {
   const params = {
     TableName: Resource.Notes.name,
-    Key: {
-      userId: "123",
-      noteId: event?.pathParameters?.id,
+    KeyConditionExpression: "userId = :userId",
+    ExpressionAttributeValues: {
+      ":userId": "123",
     },
   };
 
-  const result = await dynamoDb.send(new GetCommand(params));
-  if (!result.Item) {
-    throw new Error("Item not found.");
-  }
+  const result = await dynamoDb.send(new QueryCommand(params));
 
-  return JSON.stringify(result.Item);
+  return JSON.stringify(result.Items);
 });
