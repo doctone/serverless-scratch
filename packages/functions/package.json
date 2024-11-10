@@ -6,6 +6,7 @@
     "@aws-sdk/lib-dynamodb": "^3.687.0",
     "@serverless-scratch/core": "*",
     "sst": "*",
+    "stripe": "^17.3.1",
     "uuid": "^11.0.2"
   },
   "devDependencies": {
